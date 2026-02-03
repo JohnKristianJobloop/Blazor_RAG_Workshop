@@ -1,0 +1,15 @@
+﻿@page "/randomdadjoke"
+@attribute [StreamRendering]
+@inject ViewModels.RandomDadJokeViewModel RandomJoke
+
+<h3>RandomDadJoke</h3>
+
+<p>@RandomJoke.Joke</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        RandomJoke.OnChange += StateHasChanged;
+        await RandomJoke.FetchRandomJoke();
+    }
+}

@@ -1,0 +1,75 @@
+﻿@page "/dadjokesearch"
+@using FullStackApplication.Models
+@using FullStackApplication.Services
+@using FullStackApplication.ViewModels
+@inject DadJokeQueryViewModel Model
+@inject DadJokeQueryService Service
+
+@rendermode InteractiveServer
+
+
+<h3>Search for dad jokes</h3>
+
+<EditForm Model="Model" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <label>
+            @nameof(Model.Term)
+        </label>
+        <InputText class="form-controll" @bind-value="Model.Term"/>
+    </div>
+
+    <div class="mb-3">
+        <label>
+            @nameof(Model.Page)
+        </label>
+        <InputNumber TValue="int" class="form-controll" @bind-value="Model.Page"/>
+    </div>
+
+    <div class="mb-3">
+        <label>
+            @nameof(Model.Limit)
+        </label>
+        <InputNumber TValue="int" class="form-controll" @bind-value="Model.Limit"/>
+    </div>
+
+    <button type="submit" class ="badge text-black">Submit</button>
+
+</EditForm>
+
+@if(_collection is null)
+{
+    <p>Search for dad jokes above...</p>
+}
+else
+{
+    @foreach(var result in _collection.Results)
+    {
+        <p>
+            @result.Joke
+        </p>
+    }
+    <p>
+        Total Jokes: @_collection.TotalJokes
+    </p>
+    <p>
+        Total Pages: @_collection.TotalPages
+    </p>
+}
+
+
+
+@code {
+    private DadJokeCollection? _collection;
+
+    private async Task HandleSubmit()
+    {
+        _collection = await Service.FetchQuery("https://icanhazdadjoke.com/search", Model);
+    }
+
+    protected override void OnInitialized()
+    {
+        Model.Limit = 10;
+        Model.Page = 1;
+    }
+}
