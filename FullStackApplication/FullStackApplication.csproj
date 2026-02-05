@@ -9,9 +9,18 @@
 
   <ItemGroup>
     <Folder Include="Extentions/" />
+    <Folder Include="Extentions/ServiceCollectionExtensions/" />
     <Folder Include="Models/" />
+    <Folder Include="Models/LanguageModels/" />
+    <Folder Include="Models/Ollama/" />
+    <Folder Include="Models/Ollama/Client/" />
+    <Folder Include="Models/Ollama/Options/" />
     <Folder Include="Services/" />
     <Folder Include="ViewModels/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ollama" Version="1.15.0" />
   </ItemGroup>
 
 </Project>

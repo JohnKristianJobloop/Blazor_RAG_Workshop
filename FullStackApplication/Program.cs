@@ -1,4 +1,6 @@
 using FullStackApplication.Components;
+using FullStackApplication.Extentions.ServiceCollectionExtensions;
+using FullStackApplication.Models.Ollama.Options;
 using FullStackApplication.Services;
 using FullStackApplication.ViewModels;
 
@@ -12,6 +14,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddTransient<RandomDadJokeViewModel>();
 builder.Services.AddTransient<DadJokeQueryViewModel>();
 builder.Services.AddTransient<DadJokeQueryService>();
+builder.Services.AddScoped<TranslatorViewModel>();
+builder.Services.AddLanguageCatalog();
+builder.Services.AddOllamaClient();
 
 
 var app = builder.Build();

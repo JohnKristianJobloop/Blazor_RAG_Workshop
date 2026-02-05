@@ -1,0 +1,78 @@
+﻿@page "/Translator"
+@using FullStackApplication.ViewModels
+@inject TranslatorViewModel Vm
+@rendermode InteractiveServer
+<h3>Translator</h3>
+<EditForm Model="Vm" OnValidSubmit="TranslateAsync">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Original language</label>
+        <select class="form-select"
+                @onchange="OnOriginalLanguageChanged">
+            <option value="">-- select --</option>
+            @foreach (var lang in Vm.Items)
+            {
+                <option value="@lang.Code">@lang.Name (@lang.Code)</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Target language</label>
+        <select class="form-select"
+                @onchange="OnTargetLanguageChanged">
+            <option value="">-- select --</option>
+            @foreach (var lang in Vm.Items)
+            {
+                <option value="@lang.Code">@lang.Name (@lang.Code)</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Text to translate</label>
+        <textarea class="form-control"
+                  rows="5"
+                  @bind="Vm.TextToTranslate"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Translate
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(Vm.TranslatedText))
+{
+    <hr />
+    <h4>Result</h4>
+    <textarea class="form-control"
+              rows="5"
+              readonly>@Vm.TranslatedText</textarea>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        Vm.OnChange = StateHasChanged;
+    }
+
+    private async Task TranslateAsync()
+    {
+        await Vm.Translate();
+    }
+
+    private void OnOriginalLanguageChanged(ChangeEventArgs e)
+    {
+        var code = e.Value?.ToString() ?? "";
+        Vm.OriginalLanguageCode = code;
+        Vm.OriginalLanguage = Vm.Items.FirstOrDefault(x => x.Code == code)?.Name ?? "";
+    }
+
+    private void OnTargetLanguageChanged(ChangeEventArgs e)
+    {
+        var code = e.Value?.ToString() ?? "";
+        Vm.TargetLanguageCode = code;
+        Vm.TargetLanguage = Vm.Items.FirstOrDefault(x => x.Code == code)?.Name ?? "";
+    }
+}
