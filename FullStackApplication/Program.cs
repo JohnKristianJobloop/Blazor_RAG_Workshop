@@ -1,8 +1,13 @@
 using FullStackApplication.Components;
+using FullStackApplication.DatabaseContext;
 using FullStackApplication.Extentions.ServiceCollectionExtensions;
+using FullStackApplication.Extentions.WebAppExtension;
+using FullStackApplication.Models.Ollama.Client;
 using FullStackApplication.Models.Ollama.Options;
 using FullStackApplication.Services;
+using FullStackApplication.Services.Seeders;
 using FullStackApplication.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +22,12 @@ builder.Services.AddTransient<DadJokeQueryService>();
 builder.Services.AddScoped<TranslatorViewModel>();
 builder.Services.AddLanguageCatalog();
 builder.Services.AddOllamaClient();
-
+builder.Services.AddDbContext<VectorDbContext>(
+    options =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), opt => opt.UseVector());
+    }
+);
 
 var app = builder.Build();
 
@@ -32,6 +42,9 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
+
+await app.SeedDataAsync();
+
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()

@@ -1,4 +1,20 @@
 services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_vector_database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 30s
+      timeout: 30s
+      retries: 20
   FullStackApplication:
     image: fullstackapplication
     ports:
@@ -7,6 +23,11 @@ services:
     build:
       context: .
       dockerfile: FullStackApplication/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=mydatabase;Username=user;Password=password;
   ollama:
     image: ollama/ollama:latest
     ports: 
@@ -19,3 +40,4 @@ services:
     restart: unless-stopped
 volumes:
   ollama:
+  postgres_vector_database:
