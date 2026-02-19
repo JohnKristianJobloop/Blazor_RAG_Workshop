@@ -9,7 +9,7 @@ public static class LanguageCatalocServiceCollectionExtention
     {
         public IServiceCollection AddLanguageCatalog()
         {
-            collection.AddSingleton<IReadOnlyList<LanguageItem>>(_ => LanguageCatalog.Build());
+            collection.AddSingleton<IReadOnlyList<LanguageItem>>(_ => LanguageCatalog.Build()); //new()
             return collection;
         }
     }

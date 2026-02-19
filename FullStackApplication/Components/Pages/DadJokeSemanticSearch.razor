@@ -1,0 +1,29 @@
+﻿@page "/dadjokes/semanticsearch"
+@using FullStackApplication.ViewModels
+@inject DadJokeSemanticSearchViewModel vm;
+@rendermode InteractiveServer
+
+<h3>DadJokeSemanticSearch</h3>
+<EditForm Model="vm" OnSubmit="HandleSubmit">
+    <textarea
+        class="form-control"
+        rows=3
+        @bind="vm.Prompt"/>
+    <button type="submit" class="btn btn-primary">Submit!</button>
+</EditForm>
+@foreach(var joke in vm.Jokes)
+{
+    <textarea
+        class="form-control"
+        rows=3
+        readonly>
+        @joke.Joke
+    </textarea>
+}
+@code {
+    public async Task HandleSubmit()
+    {
+        vm.OnChange += StateHasChanged;
+        await vm.SearchBasedOnPrompt();
+    }
+}

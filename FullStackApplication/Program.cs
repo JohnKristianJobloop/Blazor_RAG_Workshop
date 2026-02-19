@@ -20,6 +20,8 @@ builder.Services.AddTransient<RandomDadJokeViewModel>();
 builder.Services.AddTransient<DadJokeQueryViewModel>();
 builder.Services.AddTransient<DadJokeQueryService>();
 builder.Services.AddScoped<TranslatorViewModel>();
+builder.Services.AddScoped<DadJokeSemanticSearchService>();
+builder.Services.AddScoped<DadJokeSemanticSearchViewModel>();
 builder.Services.AddLanguageCatalog();
 builder.Services.AddOllamaClient();
 builder.Services.AddDbContext<VectorDbContext>(
